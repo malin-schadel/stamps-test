@@ -1,0 +1,15 @@
+<h1>Your Stamp Cards</h1>
+<% @stamp_card_hashes.each do |hash| %>
+  <div class="stamp-card">
+    <h3><%= hash[:shop] %></h3>
+    <p>You have <%= hash[:actual] %> / <%= hash[:max] %> stamps!</p>
+    <div class="d-flex">
+      <% hash[:actual].times do %>
+        <div class="stamp-field stamped"></div>
+      <% end %>
+      <% (hash[:max]-hash[:actual]).times do %>
+        <div class="stamp-field"></div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
