@@ -1,0 +1,8 @@
+<h1>Stamp Cards Index</h1>
+
+<ul>
+  <% @stamp_cards.each do |stamp_card| %>
+    <li><%= stamp_card.discount_item %></li>
+    <%= link_to "Stamp it!", stamp_it_path(stamp_card_id: stamp_card.id, customer_id: @customer.id) %>
+  <% end %>
+</ul>

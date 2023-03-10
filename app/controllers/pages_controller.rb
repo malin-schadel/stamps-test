@@ -15,4 +15,28 @@ class PagesController < ApplicationController
       }
     end
   end
+
+  def qr_code
+    @user = current_user
+
+    qrcode = RQRCode::QRCode.new(stamp_cards_path(@shop, customer_id: current_user.id))
+    @svg = qrcode.as_svg(
+      offset: 0,
+      color: '000',
+      shape_rendering: 'crispEdges',
+      module_size: 6,
+      standalone: true
+    )
+  end
+
+  def map
+    @shops = Shop.all
+    # The `geocoded` scope filters only shops with coordinates
+    @markers = @shops.geocoded.map do |flat|
+      {
+        lat: flat.latitude,
+        lng: flat.longitude
+      }
+    end
+  end
 end

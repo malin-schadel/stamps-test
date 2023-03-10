@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
   devise_for :users
+
   root to: "pages#home"
   get "dashboard", to: "pages#dashboard"
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get "qr_code", to: "pages#qr_code"
+  get "map", to: "pages#map"
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  resources :stamp_cards, only: [:index]
+
+  get 'stamp_it', to: "stamp_cards#stamp_it"
+  get 'create_card', to: "stamp_cards#create_card"
 end

@@ -7,4 +7,5 @@ class User < ApplicationRecord
   has_many :shops
   has_many :user_cards
   has_many :user_shops
+  has_many :stamp_cards, through: :shops
 end
