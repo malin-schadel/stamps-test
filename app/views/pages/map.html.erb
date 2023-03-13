@@ -7,12 +7,19 @@
   <button type="button"
           class="btn btn-primary"
           data-bs-toggle="modal"
-          data-bs-target="#exampleModal">
+          data-bs-target="#exampleModal"
+          data-action="click->map#passPositionToModalMap">
     Launch demo modal
   </button>
 
   <!-- Modal -->
-  <div class="modal fade" data-action="shown.bs.modal->map#mountModalMap" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade"
+        data-action="change->map#switchToModalMap"
+        data-action="hide.bs.modal->map#switchToSmallMap"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div style="width: 100%; height: 600px;"
