@@ -1,6 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-import { cameraState } from "map"
-import { clippingParents } from "@popperjs/core"
 
 export default class extends Controller {
   static targets = ["smallMap", "modalMap"]
@@ -11,48 +9,48 @@ export default class extends Controller {
 
   connect() {
     mapboxgl.accessToken = this.apiKeyValue
-    this.cameraPosition = {}
 
-    this.#mountMap(this.smallMapTarget)
-    this.#fitMapToMarkers(this.map)
-    this.map.resize();
+    this.smallMap = this.#mountMap(this.smallMapTarget)
+    this.#fitMapToMarkers(this.smallMap)
+    this.modalMap = this.#mountMap(this.modalMapTarget)
+    this.resizeObserver = new ResizeObserver(() => this.modalMap.resize())
+    this.resizeObserver.observe(this.modalMapTarget)
   }
 
-  mountModalMap() {
-    this.#dismountMap()
-    this.#mountMap(this.modalMapTarget)
+  passPositionToModalMap() {
+    this.modalMap.setFreeCameraOptions(this.smallMap.getFreeCameraOptions())
   }
 
-  mountSmallMap() {
-    this.#dismountMap()
-    this.#mountMap(this.smallMapTarget)
+  switchToModalMap() {
+    this.resizeObserver.disconnect()
+    console.log("disconnected")
+  }
+
+  switchToSmallMap() {
+    console.log("hidden")
+    this.smallMap.setFreeCameraOptions(this.modalMap.getFreeCameraOptions())
   }
 
   #mountMap(mapTarget) {
-    console.log("shown")
-    this.map = new mapboxgl.Map({
+    const map = new mapboxgl.Map({
       container: mapTarget,
       style: "mapbox://styles/mapbox/streets-v10"
     })
-    this.map.setCamera(this.cameraPosition)
-    this.#addMarkersToMap(this.map)
+    this.#addMarkersToMap(map)
+    return map
   }
 
-  #dismountMap() {
-    this.cameraPosition = this.map.cameraState.center
-  }
-
-  #addMarkersToMap() {
+  #addMarkersToMap(map) {
     this.markersValue.forEach((marker) => {
       new mapboxgl.Marker()
         .setLngLat([marker.lng, marker.lat])
-        .addTo(this.map)
+        .addTo(map)
     })
   }
 
-  #fitMapToMarkers() {
+  #fitMapToMarkers(map) {
     const bounds = new mapboxgl.LngLatBounds()
     this.markersValue.forEach(marker => bounds.extend([marker.lng, marker.lat]))
-    this.map.fitBounds(bounds, { padding: 70, maxZoom: 15, duration: 0 })
+    map.fitBounds(bounds, { padding: 70, maxZoom: 15, duration: 0 })
   }
 }
